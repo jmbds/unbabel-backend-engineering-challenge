@@ -28,7 +28,7 @@ func run() error {
 	)
 
 	flag.StringVar(&inputFilepath, "input_file", "events.json", "path to input file containing events")
-	flag.StringVar(&outputFilepath, "output_file", "aggregated_events.json", "path to aggregated output file")
+	flag.StringVar(&outputFilepath, "output_file", "aggregated_events.out", "path to aggregated output file")
 	flag.IntVar(&windowSize, "window_size", 10, "size of time window for moving average")
 	flag.Parse()
 
