@@ -70,7 +70,7 @@ Make sure you have Go (1.16.x or higher), installed in your machine. Then, run t
 
 The repository comes with an events.json file, populated with the events described in the example above.
 
-	unbabel_cli --input_file=events.json --window_size=10 --output_file=aggregated_events.json
+	unbabel_cli --input_file=events.json --window_size=10 --output_file=aggregated_events.out.json
 
  There are 3 flags available:
 
