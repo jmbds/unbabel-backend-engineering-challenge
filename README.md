@@ -76,7 +76,7 @@ The repository comes with an events.json file, populated with the events describ
 
  - --input_file &rarr; Path to events file. Defaults to "events.json".
  - --window_size &rarr; The window size to calculate the moving average. Defaults to 10.
- - --output_file &rarr; Path to output file. Defaults to "aggregated_events.out".
+ - --output_file &rarr; Path to output file. Defaults to "aggregated_events.out.json".
 
 ## How to Test
 
