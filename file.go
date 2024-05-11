@@ -5,6 +5,12 @@ import (
 	"os"
 )
 
+/*
+A function that writes a string into a file.
+
+Receives a path to a file and the string value to write to the file.
+Returns an error.
+*/
 func WriteStringToFile(filepath, output string) error {
 	/*	Open file in Write Mode	*/
 	file, err := os.OpenFile(filepath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
