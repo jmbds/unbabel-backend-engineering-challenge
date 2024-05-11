@@ -1,15 +1,7 @@
 # Backend Engineering Challenge
 
 
-Welcome to our Engineering Challenge repository 🖖
-
-If you found this repository it probably means that you are participating in our recruitment process. Thank you for your time and energy. If that's not the case please take a look at our [openings](https://unbabel.com/careers/) and apply!
-
-Please fork this repo before you start working on the challenge, read it careful and take your time and think about the solution. Also, please fork this repository because we will evaluate the code on the fork.
-
-This is an opportunity for us both to work together and get to know each other in a more technical way. If you have any questions please open and issue and we'll reach out to help.
-
-Good luck!
+Welcome to my solution to Unababel's Backend Engineer Challenge 🖖
 
 ## Challenge Scenario
 
@@ -68,19 +60,39 @@ The output file would be something in the following format.
 {"date": "2018-12-26 18:23:00", "average_delivery_time": 31}
 {"date": "2018-12-26 18:24:00", "average_delivery_time": 42.5}
 ```
+## How to Build
 
-#### Notes
+Make sure you have Go (1.16.x or higher), installed in your machine. Then, run the following command:
 
-Before jumping right into implementation we advise you to think about the solution first. We will evaluate, not only if your solution works but also the following aspects:
+	go build -o unbabel_cli
 
-+ Simple and easy to read code. Remember that [simple is not easy](https://www.infoq.com/presentations/Simple-Made-Easy)
-+ Comment your code. The easier it is to understand the complex parts, the faster and more positive the feedback will be
-+ Consider the optimizations you can do, given the order of the input lines
-+ Include a README.md that briefly describes how to build and run your code, as well as how to **test it**
-+ Be consistent in your code. 
+## How to Run
 
-Feel free to, in your solution, include some your considerations while doing this challenge. We want you to solve this challenge in the language you feel most comfortable with. Our machines run Python (3.7.x or higher) or Go (1.16.x or higher). If you are thinking of using any other programming language please reach out to us first 🙏.
+The repository comes with an events.json file, populated with the events described in the example above.
 
-Also, if you have any problem please **open an issue**. 
+	unbabel_cli --input_file=events.json --window_size=10 --output_file=aggregated_events.json
 
-Good luck and may the force be with you
+ There are 3 flags available:
+
+ - --input_file &rarr; Path to events file. Defaults to "events.json".
+ - --window_size &rarr; The window size to calculate the moving average. Defaults to 10.
+ - --output_file &rarr; Path to output file. Defaults to "aggregated_events.json".
+
+## How to Test
+
+The application is divided into 3 packages: main, events and statistics.
+
+To test the code, you can test each package individually.
+
+To test the statistics package:
+
+	go test github.com/jmbds/unbabel-backend-engineering-challenge/internal/statistics
+
+To test the events package:
+
+ 	go test github.com/jmbds/unbabel-backend-engineering-challenge/internal/events
+
+Alternatively, you can run tests for the whole application, using the following command:
+
+ 	go test ./...
+
