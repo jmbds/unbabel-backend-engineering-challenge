@@ -84,6 +84,10 @@ The application is divided into 3 packages: main, events and statistics.
 
 To test the code, you can test each package individually.
 
+To test the main package:
+
+	go test github.com/jmbds/unbabel-backend-engineering-challenge
+
 To test the statistics package:
 
 	go test github.com/jmbds/unbabel-backend-engineering-challenge/internal/statistics
