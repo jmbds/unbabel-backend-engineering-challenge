@@ -10,7 +10,10 @@ import (
 	"github.com/jmbds/unbabel-backend-engineering-challenge/internal/statistics"
 )
 
+const InputTimestampFormat string = "2006-01-02 15:04:05.000000"
+
 func TestGroupEventsByUnit(t *testing.T) {
+
 	testcases := []struct {
 		name          string
 		events        []events.EventTranslationDelivered
@@ -45,11 +48,44 @@ func TestGroupEventsByUnit(t *testing.T) {
 			errors.New(""),
 		},
 		{
-			"no dataset",
+			"invalid case - no dataset",
 			[]events.EventTranslationDelivered{},
 			time.Minute,
 			[]statistics.DataPoint{},
 			errors.New("No events found. Please provide a valid list of events."),
+		},
+		{
+			"invalid case - wrong date formats in first event",
+			[]events.EventTranslationDelivered{
+				{Timestamp: "26-12-2018 18:11:08.509654", Duration: 20},
+				{Timestamp: "26-12-2018 18:15:19.903159", Duration: 31},
+				{Timestamp: "26-12-2018 18:23:19.903159", Duration: 54},
+			},
+			time.Minute,
+			[]statistics.DataPoint{},
+			errors.New("Invalid date format. Please provide dates in the following format: " + InputTimestampFormat + "\n"),
+		},
+		{
+			"invalid case - wrong date formats in middle event",
+			[]events.EventTranslationDelivered{
+				{Timestamp: "2018-12-26 18:11:08.509654", Duration: 20},
+				{Timestamp: "26-12-2018 18:15:19.903159", Duration: 31},
+				{Timestamp: "2018-12-26 18:23:19.903159", Duration: 54},
+			},
+			time.Minute,
+			[]statistics.DataPoint{},
+			errors.New("Invalid date format. Please provide dates in the following format: " + InputTimestampFormat + "\n"),
+		},
+		{
+			"invalid case -  wrong date format in last event",
+			[]events.EventTranslationDelivered{
+				{Timestamp: "2018-12-26 18:11:08.509654", Duration: 20},
+				{Timestamp: "2018-12-26 18:15:19.903159", Duration: 31},
+				{Timestamp: "26-12-2018 18:23:19.903159", Duration: 54},
+			},
+			time.Minute,
+			[]statistics.DataPoint{},
+			errors.New("Invalid date format. Please provide dates in the following format: " + InputTimestampFormat + "\n"),
 		},
 	}
 
@@ -89,24 +125,48 @@ func TestGetEventWindowByUnit(t *testing.T) {
 			errors.New(""),
 		},
 		{
-			"valid case",
-			[]events.EventTranslationDelivered{
-				{Timestamp: "2018-12-26 16:32:08.509654", Duration: 20},
-				{Timestamp: "2018-12-26 18:15:19.903159", Duration: 31},
-				{Timestamp: "2018-12-26 22:25:19.903159", Duration: 54},
-			},
-			time.Minute,
-			time.Date(2018, 12, 26, 16, 32, 0, 0, time.UTC),
-			time.Date(2018, 12, 26, 22, 26, 0, 0, time.UTC),
-			errors.New(""),
-		},
-		{
 			"invalid case - no dataset",
 			[]events.EventTranslationDelivered{},
 			time.Minute,
 			time.Time{},
 			time.Time{},
 			errors.New("No events found. Please provide a valid list of events."),
+		},
+		{
+			"invalid case - wrong date format in first event",
+			[]events.EventTranslationDelivered{
+				{Timestamp: "26-12-2018 18:11:08.509654", Duration: 20},
+				{Timestamp: "2018-12-26 18:15:19.903159", Duration: 31},
+				{Timestamp: "2018-12-26 18:23:19.903159", Duration: 54},
+			},
+			time.Minute,
+			time.Time{},
+			time.Time{},
+			errors.New("Invalid date format. Please provide dates in the following format: " + InputTimestampFormat + "\n"),
+		},
+		{
+			"valid case -  wrong date format in middle event",
+			[]events.EventTranslationDelivered{
+				{Timestamp: "2018-12-26 18:11:08.509654", Duration: 20},
+				{Timestamp: "26-12-2018 18:15:19.903159", Duration: 31},
+				{Timestamp: "2018-12-26 18:23:19.903159", Duration: 54},
+			},
+			time.Minute,
+			time.Date(2018, 12, 26, 18, 11, 0, 0, time.UTC),
+			time.Date(2018, 12, 26, 18, 24, 0, 0, time.UTC),
+			errors.New(""),
+		},
+		{
+			"invalid case -  wrong date format in last event",
+			[]events.EventTranslationDelivered{
+				{Timestamp: "2018-12-26 18:11:08.509654", Duration: 20},
+				{Timestamp: "2018-12-26 18:15:19.903159", Duration: 31},
+				{Timestamp: "26-12-2018 18:23:19.903159", Duration: 54},
+			},
+			time.Minute,
+			time.Time{},
+			time.Time{},
+			errors.New("Invalid date format. Please provide dates in the following format: " + InputTimestampFormat + "\n"),
 		},
 	}
 

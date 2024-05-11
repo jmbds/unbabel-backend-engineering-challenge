@@ -3,6 +3,7 @@ package events
 import (
 	"bufio"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -37,7 +38,7 @@ func ReadAndUnmarshallEventsFile(filepath string) ([]EventTranslationDelivered, 
 		/*	Unmarshall the scanned bytes into the EventTransationDelivered struct	*/
 		err = json.Unmarshal(scanner.Bytes(), &event)
 		if err != nil {
-			return []EventTranslationDelivered{}, err
+			return []EventTranslationDelivered{}, errors.New("Content is invalid. Please provide a valid events file.")
 		}
 
 		/*	Append to the event slice	*/
@@ -57,7 +58,7 @@ func GenerateMinuteMovingAverageOutput(events []EventTranslationDelivered, avera
 	/*	Parse the timestamp of first event to get initial Date */
 	startTimestamp, err := time.Parse(InputTimestampFormat, events[0].Timestamp)
 	if err != nil {
-		return "", err
+		return "", errors.New("Invalid date format. Please provide dates in the following format: " + InputTimestampFormat + "\n")
 	}
 	/* Truncate to minute */
 	startTimestamp = startTimestamp.Truncate(time.Minute)
