@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"os"
@@ -20,7 +21,6 @@ func main() {
 
 /* An abstraction of the main function to allow error returns */
 func run() error {
-	/* Retrieve the arguments passed to the application */
 	var (
 		inputFilepath  string
 		outputFilepath string
@@ -58,4 +58,33 @@ func run() error {
 
 	/* Output Moving Average to file */
 	return WriteStringToFile(outputFilepath, output)
+}
+
+/*
+A function that writes a string into a file.
+
+Receives a path to a file and the string value to write to the file.
+Returns an error.
+*/
+func WriteStringToFile(filepath, output string) error {
+	file, err := os.OpenFile(filepath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	err = file.Truncate(0)
+	if err != nil {
+		return err
+	}
+
+	_, err = file.Seek(0, 0)
+	if err != nil {
+		return err
+	}
+
+	writer := bufio.NewWriter(file)
+	writer.WriteString(output)
+
+	return writer.Flush()
 }
