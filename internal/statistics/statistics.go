@@ -22,12 +22,10 @@ Returns 0 if the datapoint Count is 0 or lower.
 Returns the average if the datapoint Count is bigger than 0.
 */
 func (dp *DataPoint) CalculateAverage() float64 {
-	/* When count is zero, return 0 */
 	if dp.Count <= 0 {
 		return 0
 	}
 
-	/* Otherwise return the average */
 	return dp.Total / float64(dp.Count)
 }
 
@@ -40,26 +38,21 @@ The window size is the length of previous datapoints used to calculate the movin
 Returns an array of float values, each one being the moving average in the corresponding window, and an error.
 */
 func CalculateMovingAverage(dataPoints []DataPoint, windowSize int) ([]float64, error) {
-	/*	When no datapoints are provided, return an error	*/
 	if len(dataPoints) == 0 {
 		return []float64{}, errors.New("Dataset was empty, please provide a valid dataset.")
 	}
 
-	/*	Slice for moving average return values	*/
 	movingAverage := make([]float64, 0)
 
 	/*	Struct with Total Duration and NrEvents in Window	*/
-	window := DataPoint{Total: 0, Count: 0}
+	windowData := DataPoint{Total: 0, Count: 0}
 
-	/*	Queue with last K elements from dataset. The queue size is at most the size of window.	*/
+	/*	Queue with last K elements from dataset. Where K is at most the windowSize.	*/
 	queue := make([]DataPoint, 0, windowSize)
 
-	/* Struct to hold tail element from queue */
 	tail := DataPoint{}
 
-	/*	Iterate through every datapoint. */
 	for i := 0; i < len(dataPoints); i++ {
-		/*	Append datapoint to queue */
 		queue = append(queue, dataPoints[i])
 
 		/*
@@ -75,13 +68,13 @@ func CalculateMovingAverage(dataPoints []DataPoint, windowSize int) ([]float64, 
 
 		/*
 			Update the Total Duration and NrEvents in Window.
-			We remove the tail element that left the queue and add the datapoint that was appended.
+			We remove the tail element that left the queue and add the datapoint that was just appended.
 		*/
-		window.Total = window.Total - tail.Total + dataPoints[i].Total
-		window.Count = window.Count - tail.Count + dataPoints[i].Count
+		windowData.Total = windowData.Total - tail.Total + dataPoints[i].Total
+		windowData.Count = windowData.Count - tail.Count + dataPoints[i].Count
 
-		/*	Append Window average to return slice	*/
-		movingAverage = append(movingAverage, window.CalculateAverage())
+		/*	Calculate the average for the curent window and append to movingAverage	*/
+		movingAverage = append(movingAverage, windowData.CalculateAverage())
 	}
 
 	return movingAverage, nil

@@ -39,10 +39,9 @@ func GroupEventsByUnit(events []EventTranslationDelivered, unit time.Duration) (
 	/*	Calculate number of time units in event input. */
 	datasetLength := calculateUnitDifference(windowStart, windowEnd, unit) + 1
 
-	/*	Initialize dataset with 0 values.	*/
 	dataset := make([]statistics.DataPoint, datasetLength, datasetLength)
 
-	/* Iterate through events and group them by minute difference to window start.	*/
+	/* Iterate through events and group them by minute difference to start timestamp.	*/
 	for _, event := range events {
 		timestamp, err := time.Parse(InputTimestampFormat, event.Timestamp)
 		if err != nil {
@@ -55,7 +54,6 @@ func GroupEventsByUnit(events []EventTranslationDelivered, unit time.Duration) (
 		/* Calculate the corresponding index for the event, based on time unit difference to the window start. */
 		index := calculateUnitDifference(windowStart, timestamp, unit)
 
-		/*	Increment the number of Events and total Duration for specific index	*/
 		dataset[index] = statistics.DataPoint{
 			Total: dataset[index].Total + float64(event.Duration),
 			Count: dataset[index].Count + 1,
@@ -71,24 +69,19 @@ Receives a list of events and a unit of time.
 Returns a start time and an end time according to the unit of time given.
 */
 func GetEventWindowByUnit(events []EventTranslationDelivered, unit time.Duration) (time.Time, time.Time, error) {
-	/* Check if there are events to calculate the time window */
 	nrEvents := len(events)
 	if nrEvents == 0 {
 		return time.Time{}, time.Time{}, errors.New("No events found. Please provide a valid list of events.")
 	}
 
-	/* Since events are ordered, grab the first and last event of the list */
 	initialEvent, finalEvent := events[0], events[nrEvents-1]
 
-	/* Parse the timestamp of first event */
 	initialEventTimestamp, err := time.Parse(InputTimestampFormat, initialEvent.Timestamp)
 	if err != nil {
 		return time.Time{}, time.Time{}, errors.New("Invalid date format. Please provide dates in the following format: " + InputTimestampFormat + "\n")
 	}
-	/* Truncate to time unit */
 	initialEventTimestamp = initialEventTimestamp.Truncate(1 * unit)
 
-	/* Parse the timestamp of last event */
 	finalEventTimestamp, err := time.Parse(InputTimestampFormat, finalEvent.Timestamp)
 	if err != nil {
 		return time.Time{}, time.Time{}, errors.New("Invalid date format. Please provide dates in the following format: " + InputTimestampFormat + "\n")
@@ -96,7 +89,6 @@ func GetEventWindowByUnit(events []EventTranslationDelivered, unit time.Duration
 	/* Add 1 unit, since the last event will only be counted in next time unit, and truncate to time unit */
 	finalEventTimestamp = finalEventTimestamp.Add(1 * unit).Truncate(1 * unit)
 
-	/* Return initial and start dates [aka event window] */
 	return initialEventTimestamp, finalEventTimestamp, nil
 }
 
