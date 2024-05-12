@@ -41,6 +41,9 @@ func CalculateMovingAverage(dataPoints []DataPoint, windowSize int) ([]float64, 
 	if len(dataPoints) == 0 {
 		return []float64{}, errors.New("Dataset was empty, please provide a valid dataset.")
 	}
+	if windowSize < 1 {
+		return []float64{}, errors.New("Window Size has to be equal or greater than 1, please provide a valid Window Size.")
+	}
 
 	movingAverage := make([]float64, 0)
 

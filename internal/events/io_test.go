@@ -67,7 +67,7 @@ func TestGenerateMinuteMovingAverageOutput(t *testing.T) {
 				{Timestamp: "2018-12-26 18:12:19.903159"},
 			},
 			[]float64{0, 20, 20},
-			"{\"date\": \"2018-12-26 18:11:00\", \"average_delivery_time\": 0.0}\n{\"date\": \"2018-12-26 18:12:00\", \"average_delivery_time\": 20.0}\n{\"date\": \"2018-12-26 18:13:00\", \"average_delivery_time\": 20.0}\n",
+			"{\"date\": \"2018-12-26 18:11:00\", \"average_delivery_time\": 0}\n{\"date\": \"2018-12-26 18:12:00\", \"average_delivery_time\": 20}\n{\"date\": \"2018-12-26 18:13:00\", \"average_delivery_time\": 20}\n",
 			errors.New(""),
 		},
 		{
