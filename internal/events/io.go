@@ -58,7 +58,13 @@ func GenerateMinuteMovingAverageOutput(events []EventTranslationDelivered, avera
 		timestamp := startTimestamp.Add(time.Duration(i) * 1 * time.Minute)
 		formattedTimestamp := timestamp.Format(OutputTimestampFormat)
 
-		textToOutput += fmt.Sprintf("{\"date\": \"%s\", \"average_delivery_time\": %.1f}\n", formattedTimestamp, average)
+		/* Check if we should remove decimal places of float value */
+		if average == float64(int(average)) {
+			textToOutput += fmt.Sprintf("{\"date\": \"%s\", \"average_delivery_time\": %d}\n", formattedTimestamp, int(average))
+		} else {
+			textToOutput += fmt.Sprintf("{\"date\": \"%s\", \"average_delivery_time\": %.1f}\n", formattedTimestamp, average)
+		}
+
 	}
 
 	return textToOutput, nil
