@@ -51,7 +51,7 @@ func CalculateMovingAverage(dataPoints []DataPoint, windowSize int) ([]float64, 
 	windowData := DataPoint{Total: 0, Count: 0}
 
 	/*	Queue with last K elements from dataset. Where K is at most the windowSize.	*/
-	queue := make([]DataPoint, 0, windowSize)
+	queue := make([]DataPoint, 0, windowSize+1)
 
 	tail := DataPoint{}
 
